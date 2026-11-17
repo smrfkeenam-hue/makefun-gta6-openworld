@@ -3,17 +3,77 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Block Dodger</title>
+<meta name="description" content="Solmar Bay — an open-world crime story. Steal cars, outrun the Solmar Bay PD, and run five jobs for the Tide crew.">
+<meta name="theme-color" content="#0e1420">
+<title>Solmar Bay — Open-World Crime Story</title>
 <style>
-  html, body { margin: 0; height: 100%; overflow: hidden; background: #11141b; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0e1420;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
   #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-  /* Read aloud, never shown: the status line screen readers announce. */
   #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  #hud { position: fixed; inset: 0; pointer-events: none; color: #f4f1e6;
+    text-shadow: 0 1px 3px rgba(0,0,0,.7); display: none; }
+  #hud.playing { display: block; }
+  .panel { background: rgba(12,16,24,.72); border-radius: 10px; padding: 10px 14px; }
+  #hud-objective { position: absolute; top: 14px; left: 14px; max-width: 430px;
+    font-size: 15px; line-height: 1.45; }
+  #hud-objective .job { color: #ffd23f; font-weight: 700; display: block; font-size: 13px;
+    letter-spacing: .08em; text-transform: uppercase; }
+  #hud-jobs { color: #ffd23f; font-size: 13px; letter-spacing: 4px; margin-top: 4px; }
+  #hud-tip { font-size: 12px; color: #c9cdd6; font-style: italic; margin-top: 4px; }
+  #hud-top-right { position: absolute; top: 14px; right: 14px; text-align: right;
+    display: flex; flex-direction: column; align-items: flex-end; }
+  #hud-cash { font-size: 27px; font-weight: 800; color: #7ddba0; }
+  #hud-stars { font-size: 19px; letter-spacing: 2px; color: #ffd23f; margin-top: 2px; white-space: nowrap; }
+  #hud-stars.hot { color: #ff3b30; animation: blink 0.7s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: .45; } }
+  #hud-district { font-size: 13px; color: #f4f1e6; margin-top: 2px; white-space: nowrap;
+    background: rgba(12,16,24,.6); border-radius: 8px; padding: 3px 8px; }
+  #hud-clock { font-size: 13px; color: #ffd23f; margin-top: 2px; white-space: nowrap;
+    background: rgba(12,16,24,.6); border-radius: 8px; padding: 3px 8px; font-variant-numeric: tabular-nums; }
+  #hud-bottom-right { position: absolute; right: 14px; bottom: 14px; text-align: right; }
+  #hud-speed { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  #hud-speed.redline { color: #ff3b30; animation: blink 0.5s steps(2) infinite; }
+  #hud-health { width: 220px; height: 14px; background: rgba(12,16,24,.72); border-radius: 7px;
+    overflow: hidden; margin-left: auto; }
+  #hud-health-fill { height: 100%; width: 100%; background: #3f9e6e; transition: width .2s; }
+  #hud-health-fill.low { background: #e5484d; }
+  #hud-health-text { font-size: 12px; color: #c9cdd6; margin-top: 3px; }
+  #hud-message { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%);
+    max-width: 640px; text-align: center; font-size: 17px; padding: 10px 18px; display: none; }
+  #hud-message.show { display: block; }
+  #hud-prompt { position: absolute; left: 50%; bottom: 170px; transform: translateX(-50%);
+    font-size: 15px; font-weight: 700; color: #ffd23f; padding: 8px 14px; display: none; }
+  #hud-prompt.show { display: block; }
+  #minimap-wrap { position: absolute; left: 14px; bottom: 14px; }
+  #minimap { display: block; border-radius: 50%; border: 3px solid rgba(244,241,230,.85);
+    box-shadow: 0 0 0 3px rgba(12,16,24,.6); background: #20262e; }
+  #hud-help { position: absolute; left: 50%; transform: translateX(-50%); bottom: 14px;
+    font-size: 12px; color: rgba(244,241,230,.9); background: rgba(12,16,24,.6);
+    border-radius: 8px; padding: 4px 10px; white-space: nowrap; }
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Block Dodger: move the paddle left and right to dodge falling blocks and catch coins"></canvas>
+<canvas id="game" aria-label="Solmar Bay: drive, steal cars, outrun the police and run five jobs for the Tide crew"></canvas>
 <p id="status" role="status" aria-live="polite"></p>
+<div id="hud">
+  <div id="hud-objective" class="panel"><span class="job">Solmar Bay</span><span id="hud-objective-text">Loading…</span><div id="hud-jobs">○○○○○</div><div id="hud-tip"></div></div>
+  <div id="hud-top-right">
+    <div id="hud-cash" class="panel">$250</div>
+    <div id="hud-stars">☆☆☆☆☆</div>
+    <div id="hud-district">Marina Bay</div>
+    <div id="hud-clock">17:24</div>
+  </div>
+  <div id="hud-bottom-right">
+    <div id="hud-speed">On foot</div>
+    <div id="hud-health"><div id="hud-health-fill"></div></div>
+    <div id="hud-health-text">100</div>
+  </div>
+  <div id="hud-message" class="panel"></div>
+  <div id="hud-prompt" class="panel"></div>
+  <div id="minimap-wrap"><canvas id="minimap" width="220" height="220" aria-label="Minimap of Solmar Bay"></canvas></div>
+  <div id="hud-help">WASD drive &amp; walk · Mouse aim · Click shoot · E/F enter car · Shift run · Space/right-click handbrake · P pause · M mute · R restart job · N new story · Gamepad supported</div>
+</div>
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>
