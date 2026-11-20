@@ -141,11 +141,23 @@ if (!same) {
   throw new Error('Solmar Bay: dossier is not deterministic across two builds — refusing to hand in.');
 }
 // The dossier's own text cap: the judge refuses text over text_max_bytes, so
-// fail here with the overage instead of handing in a refused entry.
+// fail here with the overage instead of handing in a refused entry. The text
+// is the game's own source plus the README, so a bloated comment in game/src
+// can push it over — the overage in the message says by how much. The current
+// build sits just under the cap, so any source growth needs a re-check here.
 const dossierText = JSON.parse(Buffer.from(first).toString('utf8')).text ?? '';
 const dossierTextBytes = Buffer.byteLength(dossierText, 'utf8');
 if (dossierTextBytes > dossierOptions.text_max_bytes) {
   throw new Error(`Solmar Bay: dossier text is ${dossierTextBytes} bytes, over the ${dossierOptions.text_max_bytes} cap by ${dossierTextBytes - dossierOptions.text_max_bytes}.`);
+}
+// The dossier must carry every screenshot, cover first: a dropped image would
+// hand the judge a game it can barely see, so refuse instead of handing in.
+const dossierImages = JSON.parse(Buffer.from(first).toString('utf8')).images ?? [];
+if (dossierImages.length !== shots.length) {
+  throw new Error(`Solmar Bay: dossier carries ${dossierImages.length} images but screenshots/ holds ${shots.length}.`);
+}
+if (dossierImages.length > 0 && dossierImages[0].name !== shots[0]) {
+  throw new Error(`Solmar Bay: dossier cover is ${dossierImages[0].name}, expected ${shots[0]}.`);
 }
 writeFileSync(join(out, 'dossier.json'), first);
 console.log(`Solmar Bay handed in: game/ ${gameFiles} files (${gameBytes} bytes), ${shots.length} screenshots, dossier ${first.length} bytes (text ${dossierTextBytes} of ${dossierOptions.text_max_bytes} cap, deterministic across two builds).`);
