@@ -2,13 +2,12 @@
 // turning at intersections and keeping a lane offset; pedestrians stroll the
 // sidewalks, cross at corners, and scatter when a car or a gunshot comes close.
 //
-// New in this pass: taxis (Sol Taxis stop at the kerb to pick up a waiting
-// pedestrian, then pull away), rush-hour density that follows the in-game
-// clock (busy at 08:00 and 17:30, quiet after midnight), intersection
-// yielding (a car holds when cross traffic is close), and honking — a car
-// stuck behind a slow one leans on the horn, which is a sound event the
-// world can hear. Pedestrians now have kinds: strollers, joggers (faster),
-// and dog walkers (slower, with a dog dot beside them).
+// Taxis (Sol Taxis stop at the kerb to pick up a waiting pedestrian, then pull
+// away), rush-hour density that follows the in-game clock (busy at 08:00 and
+// 17:30, quiet after midnight), intersection yielding (a car holds when cross
+// traffic is close), and honking — a car stuck behind a slow one leans on the
+// horn, which is a sound event the world can hear. Pedestrians now have kinds:
+// strollers, joggers (faster), and dog walkers (slower, with a dog dot beside them).
 
 import { CAR_MODELS, PED_COLORS, ROADS_X, ROADS_Y, WORLD } from './config.js';
 import { clamp, dist, pick, range } from './random.js';

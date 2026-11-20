@@ -41,6 +41,12 @@ export function createPolice(random, city) {
   function setStars(n) {
     starFloat = clamp(n, 0, WANTED.max);
     stars = Math.floor(starFloat);
+    // Scripted heat is a fresh chase: the unseen clock restarts here. Without
+    // this, the clock has been running since the last 0-star stretch, so the
+    // decay delay is already spent and the new stars start falling the very
+    // frame they are set — a 3-star wanted level would read as 2 stars
+    // before the HUD could even show it.
+    unseenTimer = 0;
   }
 
   function spawnCop(px, py, heading) {

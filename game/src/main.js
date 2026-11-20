@@ -4,12 +4,12 @@
 // roam). ?shot=cover|chase|city|mission stages a screenshot scene instead of
 // running the loop, paints it twice and sets window.__shotReady.
 //
-// New in this pass: run statistics (miles driven, near misses, time played,
-// busts) that the save carries and the pause screen shows; player settings
-// (mute, music volume) loaded from localStorage at boot; the music's chase
-// layer follows the wanted level, and the ambient bed follows the district
-// (waves by the beach, hum downtown). The loop, the screens and the save
-// format are unchanged — a v2 save still loads.
+// Run statistics (miles driven, near misses, time played, busts) that the save
+// carries and the pause screen shows; player settings (mute, music volume)
+// loaded from localStorage at boot; the music's chase layer follows the wanted
+// level, and the ambient bed follows the district (waves by the beach, hum
+// downtown). The loop, the screens and the save format are unchanged — a v2
+// save still loads.
 
 import { CLOCK_RATE, DAY_CYCLE, STEP, STORY } from './config.js';
 import { createRandom } from './random.js';
@@ -121,8 +121,12 @@ function applySave(data) {
 
 function startGame(fromSave) {
   winShown = false;
-  if (fromSave && saveData) applySave(saveData);
-  else {
+  if (fromSave && saveData) {
+    applySave(saveData);
+    // A completed save has already celebrated: resuming drops straight into
+    // free roam instead of replaying the win screen on the first tick.
+    if (missions.done) winShown = true;
+  } else {
     playerApi.reset(700, 900);
     missions.jumpTo(0, 0);
     police.clear();
@@ -383,8 +387,11 @@ function runShot(name) {
     renderer.draw(state, screen);
     hud.update(state);
     painted += 1;
-    if (painted < 3) requestAnimationFrame(paint);
-    else window.__shotReady = true;
+    if (painted === 3) window.__shotReady = true;
+    // Keep painting: the staged state is frozen, so every frame is the same
+    // picture — but a late canvas resize (headless windows settle their size
+    // after load) clears the canvas, and a stopped loop would leave it blank.
+    requestAnimationFrame(paint);
   }
   requestAnimationFrame(paint);
 }

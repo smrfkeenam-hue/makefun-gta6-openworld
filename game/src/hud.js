@@ -4,11 +4,10 @@
 // for text so it stays crisp at any window size; the game canvas keeps the
 // world. Updated every frame from the same state the renderer paints.
 //
-// New in this pass: a job-progress row (five dots, filled as jobs complete), a
-// clock showing the in-game time of day, a tip line under the objective, and a
-// speedometer that also shows the car's name and a redline flash at top speed.
-// The minimap now draws the beach, the pier and pickups, and rings the player
-// when the heat is on.
+// A job-progress row (five dots, filled as jobs complete), a clock showing the
+// in-game time of day, a tip line under the objective, and a speedometer that
+// also shows the car's name and a redline flash at top speed. The minimap draws
+// the beach, the pier and pickups, and rings the player when the heat is on.
 
 import { DISTRICTS, PALETTE, ROADS_X, ROADS_Y, WORLD } from './config.js';
 import { districtAt } from './city.js';

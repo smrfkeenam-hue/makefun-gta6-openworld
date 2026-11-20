@@ -3,13 +3,12 @@
 // steer, handbrake turns — and E gets her in and out. Stealing an occupied car
 // takes a moment and earns a star; a parked car is just hers.
 //
-// New in this pass: a drifting state that kicks dust and skid particles off
-// the rear wheels during a handbrake turn, a near-miss detector (threading a
-// traffic car at speed without touching it) that the world records for the
-// run statistics, and a damage model — a car that has scraped one too many
-// walls smokes, and a smoking car is slower. The numbers that decide a chase
-// (speeds, ram cooldowns, star costs) are unchanged: a getaway that worked
-// before still works.
+// A drifting state kicks dust and skid particles off the rear wheels during a
+// handbrake turn, a near-miss detector (threading a traffic car at speed without
+// touching it) feeds the run statistics, and a damage model makes a car that
+// has scraped one too many walls smoke — and a smoking car is slower. The
+// numbers that decide a chase (speeds, ram cooldowns, star costs) are unchanged:
+// a getaway that worked before still works.
 
 import { COMBAT, PLAYER, WORLD } from './config.js';
 import { angleDiff, clamp, dist } from './random.js';

@@ -2,7 +2,7 @@
 // around the city. Enemies take cover positions, shoot at the player when close,
 // and drop cash when they go down. Nothing here draws — render.js paints it.
 //
-// The crew now has two roles: gunmen who strafe and shoot from range, and
+// The crew has two roles: gunmen who strafe and shoot from range, and
 // brawlers who close in fast and swing up close — so a fight reads as a crew,
 // not five identical shooters. Gunmen reload after a burst (a visible pause
 // the player can exploit), and a rival who takes a hit ducks toward the

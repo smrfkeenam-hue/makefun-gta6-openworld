@@ -3,12 +3,12 @@
 // shadows, roofed buildings with a pseudo-3D lift, and a minimap drawn by hud.js.
 // Nothing here reads input or changes the world.
 //
-// New in this pass: headlight cones and lamp glow after dark (the clock
-// drives the light, not a fixed sunset), smoke from a battered player car,
-// taxi roof signs, rooftop helipads and AC units on the tall towers, landmark
-// markers for the named places, and brawlers drawn bulkier than gunmen so a
-// fight reads at a glance. The sky tint now follows the in-game hour through
-// the SKY_TINTS table instead of one fixed wash.
+// Headlight cones and lamp glow after dark (the clock drives the light, not a
+// fixed sunset), smoke from a battered player car, taxi roof signs, rooftop
+// helipads and AC units on the tall towers, landmark markers for the named
+// places, and brawlers drawn bulkier than gunmen so a fight reads at a glance.
+// The sky tint follows the in-game hour through the SKY_TINTS table instead of
+// one fixed wash.
 
 import { DISTRICTS, DAY_CYCLE, PALETTE, ROADS_X, ROADS_Y, SKY_TINTS, VIEW, WORLD } from './config.js';
 import { clamp, dist } from './random.js';

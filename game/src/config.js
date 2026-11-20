@@ -1,12 +1,11 @@
-// Solmar Bay — tuning, palette, districts and story data for the open-world game.
-// Every number that shapes how the city feels lives here, in one place.
+// Solmar Bay — every tunable number lives here: the city grid, the palette,
+// the car models, the chase physics, and the whole story. No other module
+// hard-codes a value that shapes how the game feels; when a number wants
+// changing, it changes here and everywhere follows.
 //
-// The city now has seven districts (North Point, the cliff-side lookout,
-// joined the map), a day cycle that the sky and the traffic follow (rush hour
-// at 08:00 and 17:30, quiet streets after midnight), and a weather table the
-// renderer reads for its sunset wash. Car models, mission steps, rewards and
-// the physics numbers that decide a chase are unchanged — a getaway that
-// worked before still works.
+// Seven districts (North Point joined the map last), a day cycle the sky and
+// the traffic both follow — rush hour at 08:00 and 17:30, quiet streets after
+// midnight — and a weather table the renderer reads for its sunset wash.
 
 export const VIEW = { width: 1280, height: 720 };
 
